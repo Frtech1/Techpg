@@ -1,0 +1,19 @@
+RewriteEngine On
+
+# Make sure index.php is the default directory index
+DirectoryIndex index.php
+
+# Redirect if .php is typed directly in the URL (to avoid duplicate content, good for SEO)
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^(.+)\.php$ /$1 [L,R=301]
+
+# Route /blog/slug to blog-single.php?slug=slug
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^blog/([a-zA-Z0-9_-]+)$ blog-single.php?slug=$1 [L,QSA]
+
+# Check if the requested file/directory does not match an existing one
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
